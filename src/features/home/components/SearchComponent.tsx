@@ -27,7 +27,6 @@ const dummyData = [
 ];
 
 export default function SearchComponent() {
-  const test = "testing";
   return (
     <div className="flex flex-col gap-5">
       <div className="flex justify-between pt-8 items-center">
