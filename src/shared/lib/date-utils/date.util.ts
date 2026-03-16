@@ -20,7 +20,7 @@ export function formatRelativeOrNZDate(dateString: string): string {
   const day = nzDate.getDate().toString().padStart(2, "0");
   const month = (nzDate.getMonth() + 1).toString().padStart(2, "0");
   const year = nzDate.getFullYear();
-  const hours = nzDate.getHours().toString().padStart(2, "0");
-  const minutes = nzDate.getMinutes().toString().padStart(2, "0");
-  return `${day}/${month}/${year}, ${hours}:${minutes}`;
+  //   const hours = nzDate.getHours().toString().padStart(2, "0");
+  //   const minutes = nzDate.getMinutes().toString().padStart(2, "0");
+  return `${day}/${month}/${year}`;
 }
