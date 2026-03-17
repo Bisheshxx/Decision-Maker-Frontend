@@ -5,13 +5,35 @@ import SearchInput from "@/shared/components/Search/SearchInput";
 import { useQuery } from "@tanstack/react-query";
 import { DecisionService } from "../services/decision-services";
 import { Decision } from "../types/decision.types";
-import { useApiQuery } from "@/shared/hooks/useApiQuery";
+import { useUrlState } from "@/shared/hooks/useUrlState";
+import { useEffect, useState } from "react";
+import { useDebounce } from "@/shared/components/useDebounce";
 
 export default function DecisionPage() {
-  const { data: response } = useQuery({
-    queryFn: () => DecisionService.getDecisions({ page: 1, pageSize: 10 }),
-    queryKey: ["decisions"],
+  const [search, setSearch] = useState("");
+
+  const debouncedSearch = useDebounce(search);
+  const { urlState, setUrlState } = useUrlState({
+    defaults: {
+      page: 1,
+      pageSize: 10,
+      search: "",
+    },
   });
+
+  const { data: response } = useQuery({
+    queryFn: () => DecisionService.getDecisions(urlState),
+    queryKey: ["decisions", urlState.page, urlState.pageSize, urlState.search],
+  });
+
+  useEffect(() => {
+    if (urlState.search !== debouncedSearch) {
+      setUrlState({
+        search: debouncedSearch,
+      });
+    }
+  }, [debouncedSearch, setUrlState, urlState.search]);
+
   return (
     <div className="container mx-auto">
       <h1 className="pt-12 leading-tight text-xl font-semibold">
@@ -19,7 +41,7 @@ export default function DecisionPage() {
       </h1>
       <div className="flex flex-col gap-5">
         <div className="flex justify-between pt-8 items-center">
-          <SearchInput />
+          <SearchInput search={search} setSearch={setSearch} />
           <CreateDecisionDialog />
         </div>
         <CardComponentGrid decision={response?.data || []} />
