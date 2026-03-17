@@ -6,3 +6,9 @@ export interface Decision {
   updatedAt?: string;
   userId?: string;
 }
+
+export type DecisionUrlDefaults = {
+  page: number;
+  pageSize: number;
+  searchTerm: string;
+};

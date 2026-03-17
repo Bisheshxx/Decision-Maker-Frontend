@@ -39,22 +39,57 @@ export function useUrlState<T extends Record<string, Primitive>>(
     return result;
   }, [searchParams, defaults]);
 
-  const setUrlState = useCallback((updates: Partial<T>) => {
-    const params = new URLSearchParams(searchParams.toString());
+  const setUrlState = useCallback(
+    (updates: Partial<T>) => {
+      const currentQuery = searchParams.toString();
+      const params = new URLSearchParams(searchParams.toString());
 
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value === null || value === "" || value === undefined) {
-        params.delete(key);
-      } else {
-        params.set(key, String(value));
+      Object.entries(updates).forEach(([key, value]) => {
+        const defaultValue = defaults[key as keyof T];
+        if (value === null || value === "" || value === undefined) {
+          params.delete(key);
+        } else if (value === defaultValue) {
+          params.delete(key);
+        } else {
+          params.set(key, String(value));
+        }
+      });
+
+      const nextQuery = params.toString();
+      if (nextQuery === currentQuery) {
+        return;
       }
-    });
 
-    router.replace(`?${params.toString()}`);
-  }, [router, searchParams]);
+      router.replace(nextQuery ? `?${nextQuery}` : "?");
+    },
+    [defaults, router, searchParams],
+  );
+
+  const getUrlKey = useCallback(
+    <K extends keyof T>(key: K) => {
+      return searchParams.get(String(key));
+    },
+    [searchParams],
+  );
+
+  const resetUrlState = useCallback(
+    (keys?: Array<keyof T>) => {
+      const resetKeys = keys ?? (Object.keys(defaults) as Array<keyof T>);
+      const updates = {} as Partial<T>;
+
+      resetKeys.forEach((key) => {
+        updates[key] = defaults[key];
+      });
+
+      setUrlState(updates);
+    },
+    [defaults, setUrlState],
+  );
 
   return {
     urlState,
     setUrlState,
+    getUrlKey,
+    resetUrlState,
   };
 }

@@ -5,34 +5,42 @@ import SearchInput from "@/shared/components/Search/SearchInput";
 import { useQuery } from "@tanstack/react-query";
 import { DecisionService } from "../services/decision-services";
 import { Decision } from "../types/decision.types";
-import { useUrlState } from "@/shared/hooks/useUrlState";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDebounce } from "@/shared/components/useDebounce";
+import useDecisionUrlState from "../hooks/decision-url-state";
+import useUiState from "@/store/ui.store";
 
 export default function DecisionPage() {
-  const [search, setSearch] = useState("");
+  const { urlState, setUrlState, resetUrlState } = useDecisionUrlState();
+  const [search, setSearch] = useState(urlState.searchTerm || "");
 
   const debouncedSearch = useDebounce(search);
-  const { urlState, setUrlState } = useUrlState({
-    defaults: {
-      page: 1,
-      pageSize: 10,
-      search: "",
-    },
-  });
+  const { setOpenDialogName } = useUiState();
+
+  const handleSubmitSuccess = useCallback(() => {
+    setSearch("");
+    setOpenDialogName(null);
+    resetUrlState(["page"]);
+  }, [resetUrlState, setOpenDialogName]);
 
   const { data: response } = useQuery({
     queryFn: () => DecisionService.getDecisions(urlState),
-    queryKey: ["decisions", urlState.page, urlState.pageSize, urlState.search],
+    queryKey: [
+      "decisions",
+      urlState.page,
+      urlState.pageSize,
+      urlState.searchTerm,
+    ],
   });
 
   useEffect(() => {
-    if (urlState.search !== debouncedSearch) {
+    if (urlState.searchTerm !== debouncedSearch) {
       setUrlState({
-        search: debouncedSearch,
+        searchTerm: debouncedSearch,
+        page: 1,
       });
     }
-  }, [debouncedSearch, setUrlState, urlState.search]);
+  }, [debouncedSearch, setUrlState, urlState.searchTerm]);
 
   return (
     <div className="container mx-auto">
@@ -42,7 +50,7 @@ export default function DecisionPage() {
       <div className="flex flex-col gap-5">
         <div className="flex justify-between pt-8 items-center">
           <SearchInput search={search} setSearch={setSearch} />
-          <CreateDecisionDialog />
+          <CreateDecisionDialog handleSubmitSuccess={handleSubmitSuccess} />
         </div>
         <CardComponentGrid decision={response?.data || []} />
       </div>

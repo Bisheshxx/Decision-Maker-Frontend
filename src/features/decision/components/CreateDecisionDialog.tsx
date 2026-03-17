@@ -9,11 +9,13 @@ import { useCallback } from "react";
 import CreateDecisionForm from "../Forms/create-decision";
 import { useApiMutation } from "@/shared/hooks/useApiMutation";
 import { DecisionService } from "../services/decision-services";
-import useUiState from "@/store/ui.store";
 
-export function CreateDecisionDialog() {
+interface IProps {
+  handleSubmitSuccess: () => void;
+}
+
+export function CreateDecisionDialog({ handleSubmitSuccess }: IProps) {
   // const handleCreate = async (data: z.infer<typeof SchemaCreateDecision>) => {};
-  const { setOpenDialogName } = useUiState();
   const form = useForm<z.infer<typeof SchemaCreateDecision>>({
     resolver: zodResolver(SchemaCreateDecision),
     defaultValues: {
@@ -22,10 +24,15 @@ export function CreateDecisionDialog() {
     },
   });
 
+  const handleSuccess = () => {
+    // setOpenDialogName(null);
+    handleSubmitSuccess();
+    form.reset();
+    // resetUrlState(["page", "searchTerm"]);
+  };
+
   const CreateDecision = useApiMutation(DecisionService.createDecision, {
-    onSuccess: () => setOpenDialogName(null),
-    onError: (error) => console.log(error.toString()),
-    invalidateQueries: ["decisions"],
+    onSuccess: handleSuccess,
   });
 
   const handleCreate = useCallback(
