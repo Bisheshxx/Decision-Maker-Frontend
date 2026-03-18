@@ -6,16 +6,29 @@ import { useQuery } from "@tanstack/react-query";
 import { DecisionService } from "../services/decision-services";
 import { Decision } from "../types/decision.types";
 import { useCallback, useEffect, useState } from "react";
-import { useDebounce } from "@/shared/components/useDebounce";
+import { useDebounce } from "@/shared/hooks/useDebounce";
 import useDecisionUrlState from "../hooks/decision-url-state";
 import useUiState from "@/store/ui.store";
+import PaginationComponent from "@/shared/components/PaginationComponent";
+import { ApiStatusHandler } from "@/shared/lib/ApiStatusHandler";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 export default function DecisionPage() {
+  const router = useRouter();
   const { urlState, setUrlState, resetUrlState } = useDecisionUrlState();
-  const [search, setSearch] = useState(urlState.searchTerm || "");
-
+  const { page, pageSize, searchTerm } = urlState;
+  const [search, setSearch] = useState(searchTerm || "");
   const debouncedSearch = useDebounce(search);
   const { setOpenDialogName } = useUiState();
+
+  const handlePageChange = useCallback(
+    (page: number) =>
+      setUrlState({
+        page,
+      }),
+    [setUrlState],
+  );
 
   const handleSubmitSuccess = useCallback(() => {
     setSearch("");
@@ -23,24 +36,25 @@ export default function DecisionPage() {
     resetUrlState(["page"]);
   }, [resetUrlState, setOpenDialogName]);
 
-  const { data: response } = useQuery({
+  const {
+    data: response,
+    isLoading,
+    isSuccess,
+    isError,
+    error,
+  } = useQuery({
     queryFn: () => DecisionService.getDecisions(urlState),
-    queryKey: [
-      "decisions",
-      urlState.page,
-      urlState.pageSize,
-      urlState.searchTerm,
-    ],
+    queryKey: ["decisions", page, pageSize, searchTerm],
   });
 
   useEffect(() => {
-    if (urlState.searchTerm !== debouncedSearch) {
+    if (searchTerm !== debouncedSearch) {
       setUrlState({
         searchTerm: debouncedSearch,
         page: 1,
       });
     }
-  }, [debouncedSearch, setUrlState, urlState.searchTerm]);
+  }, [debouncedSearch, setUrlState, searchTerm]);
 
   return (
     <div className="container mx-auto">
@@ -52,7 +66,29 @@ export default function DecisionPage() {
           <SearchInput search={search} setSearch={setSearch} />
           <CreateDecisionDialog handleSubmitSuccess={handleSubmitSuccess} />
         </div>
-        <CardComponentGrid decision={response?.data || []} />
+        <ApiStatusHandler
+          // className="min-h-[70vh] flex justify-center items-center"
+          className="min-h-[70vh]"
+          isLoading={isLoading}
+          isError={isError}
+          isSuccess={isSuccess}
+          error={error?.message}
+          button={
+            <Button variant={"destructive"} onClick={() => router.push("/")}>
+              Back to Decision
+            </Button>
+          }
+        >
+          <CardComponentGrid decision={response?.data || []} />
+        </ApiStatusHandler>
+        {response?.meta && (
+          <div className="w-full flex ">
+            <PaginationComponent
+              meta={response?.meta}
+              handlePageChange={handlePageChange}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -60,7 +96,7 @@ export default function DecisionPage() {
 
 function CardComponentGrid({ decision }: { decision: Decision[] }) {
   return (
-    <div className="grid grid-cols-4 gap-5">
+    <div className="grid grid-cols-4 gap-5 w-full">
       {decision?.map((d) => (
         <CardComponent data={d} key={d?.id} />
       ))}

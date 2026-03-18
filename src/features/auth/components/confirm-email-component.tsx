@@ -37,7 +37,12 @@ export default function ConfirmEmailPage() {
         isLoading={isPending}
         isError={isError}
         isSuccess={isSuccess}
-        error={error?.response?.message || "An error occurred."}
+        error={error?.response?.message}
+        button={
+          <Button variant={"destructive"} onClick={() => router.push("/login")}>
+            Back to Login
+          </Button>
+        }
       >
         <div className="flex flex-col items-center justify-center gap-5">
           <CircleCheck size={100} color="green" />

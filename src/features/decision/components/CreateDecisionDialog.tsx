@@ -33,6 +33,7 @@ export function CreateDecisionDialog({ handleSubmitSuccess }: IProps) {
 
   const CreateDecision = useApiMutation(DecisionService.createDecision, {
     onSuccess: handleSuccess,
+    invalidateQueries: ["decisions"],
   });
 
   const handleCreate = useCallback(

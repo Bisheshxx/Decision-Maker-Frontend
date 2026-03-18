@@ -1,13 +1,13 @@
-import { Button } from "@/components/ui/button";
 import { Loader2, TriangleAlert } from "lucide-react";
-import { useRouter } from "next/navigation";
 import React from "react";
+import { twMerge } from "tailwind-merge";
 
 interface IProps {
   isLoading: boolean;
   isError: boolean;
   isSuccess: boolean;
-  error: string;
+  error?: string;
+  button: React.ReactElement;
   children: React.ReactElement | string;
 }
 export function ApiStatusHandler({
@@ -16,12 +16,17 @@ export function ApiStatusHandler({
   isSuccess,
   error,
   children,
+  button,
   ...props
 }: IProps & React.ComponentProps<"div">) {
-  const router = useRouter();
+  const { className, ...restProps } = props;
+
   if (isLoading)
     return (
-      <div {...props}>
+      <div
+        {...restProps}
+        className={twMerge("flex items-center justify-center", className)}
+      >
         <div className="flex flex-col gap-2 items-center justify-center">
           <Loader2 className="animate-spin" size={40} />
           <span>Loading</span>
@@ -30,18 +35,25 @@ export function ApiStatusHandler({
     );
   if (isError)
     return (
-      <div {...props} role="alert">
+      <div
+        {...restProps}
+        role="alert"
+        className={twMerge("flex items-center justify-center", className)}
+      >
         <div className="flex flex-col items-center justify-center gap-5">
-          <TriangleAlert size={100} color="red" />
+          <TriangleAlert size={100} className="text-destructive" />
           <p className="text-xl font-extralight">
             {error || "An unexpected Error Occurred"}
           </p>
-          <Button variant={"destructive"} onClick={() => router.push("/login")}>
-            Back to Login
-          </Button>
+          {button}
         </div>
       </div>
     );
-  if (isSuccess) return <div {...props}>{children}</div>;
+  if (isSuccess)
+    return (
+      <div {...restProps} className={className}>
+        {children}
+      </div>
+    );
   return null;
 }
