@@ -87,7 +87,10 @@ export function LoginForm({ form, handleLogin }: IProps) {
               "Login"
             )}
           </Button> */}
-          <LoadingButtonComponent form={form} text="Login" />
+          <LoadingButtonComponent
+            isLoading={form.formState.isSubmitting}
+            text="Login"
+          />
           <Button
             variant="outline"
             type="button"

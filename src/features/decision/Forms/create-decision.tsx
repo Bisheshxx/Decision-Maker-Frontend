@@ -67,8 +67,10 @@ export default function CreateDecisionForm({ handleCreate, form }: IProps) {
           )}
         />
         <Field>
-          {/* <Button>Create</Button> */}
-          <LoadingButtonComponent form={form} text="Create" />
+          <LoadingButtonComponent
+            isLoading={form.formState.isSubmitting}
+            text="Create"
+          />
         </Field>
       </FieldGroup>
     </form>

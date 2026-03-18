@@ -135,7 +135,10 @@ export default function RegisterForm({ handleRegister, form }: IProps) {
           )}
         />
         <Field>
-          <LoadingButtonComponent form={form} text="Register" />
+          <LoadingButtonComponent
+            isLoading={form.formState.isSubmitting}
+            text="Register"
+          />
           <FieldDescription className="text-center">
             Already have an account? <Link href="/login">Sign in</Link>
           </FieldDescription>
