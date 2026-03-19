@@ -14,11 +14,12 @@ export class ApiErrorHandler extends Error {
     errorType: string;
     data?: undefined;
   }) {
-    super(
+    const normalizedErrors =
       typeof response.errors === "string"
         ? response.errors
-        : response.errors.join(", "),
-    );
+        : response.errors.join(", ");
+
+    super(response.message || normalizedErrors);
     this.name = "ApiError";
     this.response = response;
   }

@@ -30,14 +30,60 @@ export async function request<TResponse = Record<string, unknown>>({
         ...config?.headers,
       },
     });
+    const apiResponse = response.data as
+      | (ApiResponse<TResponse> & {
+          Success?: boolean;
+          Message?: string;
+          Errors?: string | string[];
+          ErrorType?: string;
+        })
+      | undefined;
+
+    // Some APIs can return HTTP 200 with success=false.
+    // Throw here so React Query sets isError and surfaces the message.
+    const isSuccess = apiResponse?.success ?? apiResponse?.Success;
+    if (isSuccess === false) {
+      throw new ApiErrorHandler({
+        success: false,
+        errors:
+          apiResponse?.errors ||
+          apiResponse?.Errors ||
+          apiResponse?.message ||
+          apiResponse?.Message ||
+          "Unknown error",
+        message:
+          apiResponse?.message ||
+          apiResponse?.Message ||
+          "An unexpected error occurred",
+        errorType:
+          apiResponse?.errorType ||
+          apiResponse?.ErrorType ||
+          "Unknown type of error",
+      });
+    }
 
     return response.data;
   } catch (error: any) {
-    // console.log("[[ API request error: ]]", error.response.data);
+    if (error instanceof ApiErrorHandler) {
+      throw error;
+    }
+
     const apiResponse = error?.response?.data;
-    const errorMessage = apiResponse?.message || "An unexpected error occurred";
-    const errorType = apiResponse?.errorType || "Unknown type of error";
-    const errors = apiResponse?.errors || "Unknown type of error";
+    const errorMessage =
+      apiResponse?.message ||
+      apiResponse?.Message ||
+      (error?.message === "Network Error"
+        ? "Could not connect to the server"
+        : "An unexpected error occurred");
+    const errorType =
+      apiResponse?.errorType ||
+      apiResponse?.ErrorType ||
+      "Unknown type of error";
+    const errors =
+      apiResponse?.errors ||
+      apiResponse?.Errors ||
+      errorMessage ||
+      "Unknown error";
 
     throw new ApiErrorHandler({
       success: false,
