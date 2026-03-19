@@ -9,6 +9,7 @@ import { useCallback } from "react";
 import CreateDecisionForm from "../Forms/create-decision";
 import { useApiMutation } from "@/shared/hooks/useApiMutation";
 import { DecisionService } from "../services/decision-services";
+import { toServerFieldError } from "@/shared/lib/hook-form-utils/index.util";
 
 interface IProps {
   handleSubmitSuccess: () => void;
@@ -34,6 +35,9 @@ export function CreateDecisionDialog({ handleSubmitSuccess }: IProps) {
   const CreateDecision = useApiMutation(DecisionService.createDecision, {
     onSuccess: handleSuccess,
     invalidateQueries: ["decisions"],
+    onError: (error) => {
+      form.setError("title", toServerFieldError(error));
+    },
   });
 
   const handleCreate = useCallback(

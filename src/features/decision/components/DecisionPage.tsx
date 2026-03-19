@@ -45,6 +45,7 @@ export default function DecisionPage() {
   } = useQuery({
     queryFn: () => DecisionService.getDecisions(urlState),
     queryKey: ["decisions", page, pageSize, searchTerm],
+    retry: false,
   });
 
   useEffect(() => {
@@ -55,6 +56,8 @@ export default function DecisionPage() {
       });
     }
   }, [debouncedSearch, setUrlState, searchTerm]);
+
+  console.log(error?.response);
 
   return (
     <div className="container mx-auto">
@@ -72,7 +75,7 @@ export default function DecisionPage() {
           isLoading={isLoading}
           isError={isError}
           isSuccess={isSuccess}
-          error={error?.message}
+          error={error?.response?.message || error?.message}
           button={
             <Button variant={"destructive"} onClick={() => router.push("/")}>
               Back to Decision

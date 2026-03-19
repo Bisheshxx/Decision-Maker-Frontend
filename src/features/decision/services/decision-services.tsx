@@ -16,4 +16,9 @@ export const DecisionService = {
       url: "decisions",
       data,
     }),
+  getDecisionDetails: async (id: string) =>
+    request<Decision>({
+      method: "GET",
+      url: `decision/${id}`,
+    }),
 };
