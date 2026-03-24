@@ -9,9 +9,10 @@ import { toast } from "sonner";
 import { getDateRelativeNZ } from "@/shared/lib/date-utils/date.util";
 import { Badge } from "@/components/ui/badge";
 import DecisionSlotComponent from "./DecisionSlotComponent";
-import { Button } from "@/components/ui/button";
-import { Plus, Settings } from "lucide-react";
 import AddDecisionItem from "./AddDecisionItem";
+import { Button } from "@/components/ui/button";
+import { Settings, Trash } from "lucide-react";
+import CustomDropdown from "@/shared/components/CustomDropdown";
 
 interface IProps {
   id: string;
@@ -48,6 +49,8 @@ export default function DecisionDetailPage({ id }: IProps) {
     };
     await updateDecision.mutateAsync(body);
   };
+
+  //todo
   if (isLoading) return;
   if (isError) return;
 
@@ -71,14 +74,36 @@ export default function DecisionDetailPage({ id }: IProps) {
           />
         </div>
         <div className="md:mt-2.5 flex flex-wrap gap-1 md:gap-2 justify-center item-end">
-          {/* <Button>
-            <span className="hidden md:block">Add Options</span>
-            <Plus className="" />
-          </Button> */}
           <AddDecisionItem />
-          <Button variant={"ghost"}>
-            <Settings />
-          </Button>
+          <CustomDropdown
+            trigger={
+              <Button variant={"ghost"}>
+                <Settings />
+              </Button>
+            }
+            actions={[
+              {
+                action: "delete",
+                fn: () => console.log("object"),
+                dialogContent: {
+                  title: "Delete",
+                  description: `Are you sure you want to delete "${data?.title}"`,
+                },
+                icon: <Trash size={15} />,
+                color: "red",
+              },
+              {
+                action: "Not delete",
+                fn: () => console.log("object"),
+                dialogContent: {
+                  title: "Not Delete",
+                  description: `Are you sure you want to delete "${data?.title}"`,
+                },
+                icon: <Trash size={15} />,
+                color: "red",
+              },
+            ]}
+          />
         </div>
       </div>
       <div className="flex gap-2 mt-4 md:w-auto w-full">
