@@ -1,3 +1,6 @@
+import z from "zod";
+import { SchemaUpsertDecisionItem } from "../Schema/decision-item.schema";
+
 export interface Decision {
   id: string;
   title: string;
@@ -22,3 +25,7 @@ export interface DecisionItem {
 export interface DecisionDetail extends Decision {
   decisionItems: DecisionItem[];
 }
+
+export type SchemaUpsertDecisionItemType = z.infer<
+  typeof SchemaUpsertDecisionItem
+>;

@@ -13,13 +13,16 @@ interface RequestOptions<TRequest = Record<string, unknown>> {
   config?: AxiosRequestConfig;
 }
 
-export async function request<TResponse = Record<string, unknown>>({
+export async function request<
+  TResponse = Record<string, unknown>,
+  TRequest = Record<string, unknown>,
+>({
   method,
   url,
   data,
   params,
   config,
-}: RequestOptions): Promise<ApiResponse<TResponse>> {
+}: RequestOptions<TRequest>): Promise<ApiResponse<TResponse>> {
   try {
     const response = await api.request<ApiResponse<TResponse>>({
       url,

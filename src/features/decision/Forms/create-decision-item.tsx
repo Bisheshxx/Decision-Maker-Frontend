@@ -1,21 +1,118 @@
-import React from "react";
-import { useForm } from "react-hook-form";
-import z from "zod";
-import { SchemaCreateDecisionItem } from "../Schema/decision-item.schema";
+import React, { useEffect } from "react";
+import { Controller, Form, useFieldArray, useForm } from "react-hook-form";
+import { SchemaUpsertDecisionItem } from "../Schema/decision-item.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  DecisionItem,
+  SchemaUpsertDecisionItemType,
+} from "../types/decision.types";
+import { useApiQuery } from "@/shared/hooks/useApiQuery";
+import { DecisionService } from "../services/decision-services";
+import { useParams } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Trash } from "lucide-react";
+import { Field } from "@/components/ui/field";
+import LoadingButtonComponent from "@/shared/components/LoadingButtonComponent";
+import { useApiMutation } from "@/shared/hooks/useApiMutation";
+import useUiState from "@/store/ui.store";
 
 export default function CreateDecisionItemForm() {
-  const form = useForm<z.infer<typeof SchemaCreateDecisionItem>>({
-    resolver: zodResolver(SchemaCreateDecisionItem),
-    defaultValues: {
-      title: "",
-    },
+  const { setOpenDialogName } = useUiState();
+  const params = useParams<{ id: string }>();
+  const decisionId = Number(params.id);
+
+  const { data: decisionItems } = useApiQuery({
+    queryFn: () => DecisionService.getDecisionItems(decisionId),
+    queryKey: ["decision-items", decisionId],
+    enabled: Number.isFinite(decisionId),
   });
 
-  const handleCreate = async (
-    data: z.infer<typeof SchemaCreateDecisionItem>,
-  ) => {
-    console.log(data);
+  const form = useForm<SchemaUpsertDecisionItemType>({
+    resolver: zodResolver(SchemaUpsertDecisionItem),
+    defaultValues: { DecisionItems: [{ id: 0, title: "" }] },
+  });
+
+  useEffect(() => {
+    if (!decisionItems || decisionItems.length === 0) return;
+    form.reset({
+      DecisionItems: decisionItems.map((item) => ({
+        id: Number(item.id),
+        title: item.title,
+      })),
+    });
+  }, [decisionItems, form]);
+
+  const { fields, remove, append } = useFieldArray({
+    control: form.control,
+    name: "DecisionItems",
+  });
+
+  const UpsertDecisionItem = useApiMutation(
+    (data: Pick<DecisionItem, "id" | "title">[]) =>
+      DecisionService.upsertDecisionItems(decisionId, data),
+    {
+      onSuccess: () => setOpenDialogName(null),
+      invalidateQueries: ["decision-detail", decisionId.toString()],
+    },
+  );
+
+  const handleCreate = async (data: SchemaUpsertDecisionItemType) => {
+    await UpsertDecisionItem.mutateAsync(data.DecisionItems);
   };
-  return <div></div>;
+
+  return (
+    <form
+      id="form-upsert-decision-items"
+      onSubmit={form.handleSubmit(handleCreate)}
+      className="flex-col flex"
+    >
+      <div className="space-y-2 h-80 overflow-y-scroll">
+        {fields.map((_, index) => (
+          <div className="flex gap-1" key={`add-option-${index}`}>
+            <div className="flex-1">
+              <Controller
+                name={`DecisionItems.${index}.title`}
+                control={form.control}
+                render={({ field }) => (
+                  <Field>
+                    <Input
+                      {...field}
+                      placeholder="e.g. Chicken Salad"
+                      className="bg-background"
+                    />
+                  </Field>
+                )}
+              />
+            </div>
+            <Button
+              type="button"
+              className="h-7.5 text-muted-foreground hover:text-destructive"
+              variant={"ghost"}
+              onClick={() => remove(index)}
+            >
+              <Trash color="red" />
+            </Button>
+          </div>
+        ))}
+        <Button
+          type="button"
+          className="mt-2 h-7.5 text-xs"
+          onClick={() => append({ id: 0, title: "" })}
+        >
+          Add Value
+        </Button>
+      </div>
+
+      {form.formState?.errors.DecisionItems?.root?.message && (
+        <p className="text-destructive text-xs text-center">
+          {form.formState?.errors.DecisionItems?.root?.message}
+        </p>
+      )}
+      <LoadingButtonComponent
+        isLoading={form.formState.isSubmitting}
+        text="Submit"
+      />
+    </form>
+  );
 }

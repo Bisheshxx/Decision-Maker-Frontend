@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import React from "react";
-import { UseFormReturn, FieldValues } from "react-hook-form";
+import { FieldValues } from "react-hook-form";
 interface IProps<T extends FieldValues> {
   isLoading: boolean;
   text: string;

@@ -1,5 +1,9 @@
 import { request } from "@/shared/lib/axios/request";
-import { Decision, DecisionDetail } from "../types/decision.types";
+import {
+  Decision,
+  DecisionDetail,
+  DecisionItem,
+} from "../types/decision.types";
 import z from "zod";
 import { SchemaCreateDecision } from "../Schema/create-decision.schema";
 
@@ -29,5 +33,19 @@ export const DecisionService = {
       method: "PUT",
       url: `decision/${id}`,
       data,
+    }),
+  getDecisionItems: async (id: number) =>
+    request<Pick<DecisionItem, "title" | "id">[]>({
+      method: "GET",
+      url: `decision/${id}/decision-items`,
+    }),
+  upsertDecisionItems: async (
+    id: number,
+    data: Pick<DecisionItem, "id" | "title">[],
+  ) =>
+    request<null, Pick<DecisionItem, "id" | "title">[]>({
+      method: "PUT",
+      url: `decision/${id}/decision-items`,
+      data: data,
     }),
 };
