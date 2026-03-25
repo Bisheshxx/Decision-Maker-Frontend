@@ -33,7 +33,8 @@ export async function request<
         ...config?.headers,
       },
     });
-    const apiResponse = response.data as
+
+    const apiResponse = response?.data as
       | (ApiResponse<TResponse> & {
           Success?: boolean;
           Message?: string;
@@ -45,6 +46,7 @@ export async function request<
     // Some APIs can return HTTP 200 with success=false.
     // Throw here so React Query sets isError and surfaces the message.
     const isSuccess = apiResponse?.success ?? apiResponse?.Success;
+
     if (isSuccess === false) {
       throw new ApiErrorHandler({
         success: false,
@@ -70,7 +72,6 @@ export async function request<
     if (error instanceof ApiErrorHandler) {
       throw error;
     }
-
     const apiResponse = error?.response?.data;
     const errorMessage =
       apiResponse?.message ||

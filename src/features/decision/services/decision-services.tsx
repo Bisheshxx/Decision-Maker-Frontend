@@ -34,6 +34,11 @@ export const DecisionService = {
       url: `decision/${id}`,
       data,
     }),
+  deleteDecision: async (id: string) =>
+    request<null>({
+      method: "DELETE",
+      url: `decision/${id}`,
+    }),
   getDecisionItems: async (id: number) =>
     request<Pick<DecisionItem, "title" | "id">[]>({
       method: "GET",

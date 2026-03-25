@@ -4,12 +4,6 @@ import { motion, useAnimation } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { DecisionItem } from "../types/decision.types";
 
-// const OPTIONS = ["Chicken Salad", "Rice and Chicken", "Broccoli"];
-// const visibleItems = 11; // How many options you want to see at once
-// const speed = 4; // Seconds the spin lasts
-// const FALLBACK_ITEM_HEIGHT = 40;
-// const CENTER_OFFSET = Math.floor(visibleItems / 2);
-
 interface IProps {
   options: Pick<DecisionItem, "id" | "title">[]; //DecisionItems
   visibleItems: number;
@@ -55,7 +49,6 @@ export default function DecisionSlotComponent({
 
     const winnerIndex = Math.floor(Math.random() * options.length);
     const iterations = 10;
-    // Align winner to the middle (highlighted) row, not the top row.
     const finalY = -(
       (iterations * options.length + winnerIndex - CENTER_OFFSET) *
       itemHeight

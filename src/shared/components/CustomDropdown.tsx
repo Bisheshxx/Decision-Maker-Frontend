@@ -7,9 +7,16 @@ import {
 } from "@/components/ui/popover";
 import { twMerge } from "tailwind-merge";
 import CustomDialog from "./CustomDialog";
-import { Plus } from "lucide-react";
 import { useState } from "react";
 import useUiState from "@/store/ui.store";
+
+const actionColorClassMap: Record<string, string> = {
+  red: "text-red-500 dark:text-red-400 dark:hover:text-red-300",
+  amber: "text-amber-500 dark:text-amber-400 dark:hover:text-amber-300",
+  green: "text-green-500 dark:text-green-400 dark:hover:text-green-300",
+  blue: "text-blue-500 dark:text-blue-400 dark:hover:text-blue-300",
+  zinc: "text-zinc-500 dark:text-zinc-400 dark:hover:text-zinc-300",
+};
 
 interface Actions {
   action: string;
@@ -59,9 +66,8 @@ export default function CustomDropdown({
             <div
               key={index}
               className={twMerge(
-                "capitalize flex gap-2 text-sm justify-start items-center px-2 py-1 dark:hover:bg-white hover:bg-black dark:hover:text-black rounded-md",
-                action?.color &&
-                  `text-${action?.color}-500 hover:dark:text-${action?.color}-500`,
+                "capitalize flex gap-2 text-sm justify-start items-center px-2 py-1 dark:hover:bg-white hover:bg-black  dark:hover:text-black rounded-md",
+                action?.color ? actionColorClassMap[action.color] : "",
               )}
               onClick={() => handleOnclick(action)}
             >
