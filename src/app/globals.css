@@ -132,14 +132,12 @@
   body {
     @apply bg-background text-foreground;
   }
+  .container {
+    @apply mx-auto w-full  px-2 pt-2 container md:px-1;
+  }
 }
 
 @theme {
-  --container: 22rem; /* small container */
-  --container-md: 32rem; /* medium */
-  --container-lg: 48rem; /* large */
-  --container-xl: 64rem; /* extra large */
-  --container-2xl: 80rem; /* 2xl */
 }
 
 .custom-button {

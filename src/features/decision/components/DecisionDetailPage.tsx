@@ -42,7 +42,7 @@ export default function DecisionDetailPage({ id }: IProps) {
 
   const checkIsMobile = useCallback(() => {
     const nextLength =
-      window.innerWidth < 768
+      window.innerHeight < 668
         ? MOBILE_DECISION_ITEM_LENGTH
         : DECISION_ITEM_LENGTH;
     setOptionLength((currentLength) =>

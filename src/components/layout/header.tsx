@@ -9,7 +9,7 @@ import ThemeSelector from "@/shared/components/ThemeSelector";
 export default function Header() {
   const router = useRouter();
   return (
-    <div className=" flex items-center justify-between h-12 px-1  mb-2">
+    <div className="container flex items-center justify-between h-12   mb-2">
       <Image
         src={Logo}
         height={50}

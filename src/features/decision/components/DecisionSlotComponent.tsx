@@ -141,15 +141,14 @@ export default function DecisionSlotComponent({
           </div>
           <div className="flex-1" />
         </div>
+        <Button
+          onClick={startSpin}
+          disabled={isSpinning}
+          className="w-16 h-16 md:w-28 md:h-28 font-semi-bold uppercase tracking-tight rounded-full absolute md:right-20  md:text-lg text-[10px] md:top-0 bottom-0 right-0"
+        >
+          {isSpinning ? "Spinning..." : "Spin"}
+        </Button>
       </div>
-
-      <Button
-        onClick={startSpin}
-        disabled={isSpinning}
-        className="w-16 h-16 md:w-28 md:h-28 font-semi-bold uppercase tracking-tight rounded-full absolute md:right-20 right-10 md:text-lg text-[10px]"
-      >
-        {isSpinning ? "Spinning..." : "Spin"}
-      </Button>
     </div>
   );
 }
