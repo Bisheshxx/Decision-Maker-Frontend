@@ -4,6 +4,7 @@ import Image from "next/image";
 import Logo from "../../../public/logo.png";
 import AvatarDropdown from "@/shared/components/AvatarDropdown";
 import { DASHBOARD_ROUTE } from "@/shared/constant/routes";
+import ThemeSelector from "@/shared/components/ThemeSelector";
 
 export default function Header() {
   const router = useRouter();
@@ -17,7 +18,10 @@ export default function Header() {
         className="h-10 object-cover cursor-pointer"
         onClick={() => router.push(DASHBOARD_ROUTE)}
       />
-      <AvatarDropdown />
+      <div className="flex gap-4 items-center">
+        <ThemeSelector />
+        <AvatarDropdown />
+      </div>
     </div>
   );
 }

@@ -38,7 +38,7 @@ export default function CardComponent({ data }: IProps) {
           {formatRelativeOrNZDate(data?.createdAt)}
         </CardFooter>
         <CardAction className="h-full">
-          <ChevronRight className="stroke-gray-500 group-hover:stroke-white transition-all duration-300 group-hover:translate-x-1 group-hover:scale-110" />
+          <ChevronRight className="dark:stroke-gray-500 dark:group-hover:stroke-white transition-all duration-300 group-hover:translate-x-1 group-hover:scale-110" />
         </CardAction>
       </CardHeader>
     </Card>

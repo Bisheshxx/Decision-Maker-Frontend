@@ -11,7 +11,7 @@ export default function SearchInput({ search, setSearch }: IProps) {
   return (
     <div className="relative">
       <Input
-        className="md:w-[230px] w-[150px] text-xs md:text-xs h-[26px] pl-7"
+        className="md:w-[230px] w-[190px] text-xs md:text-xs h-[26px] pl-7"
         onChange={(e) => setSearch(e.target.value)}
         value={search}
         placeholder="Search for a decision"

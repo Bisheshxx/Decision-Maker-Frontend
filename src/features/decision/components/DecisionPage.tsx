@@ -67,10 +67,7 @@ export default function DecisionPage() {
 
   return (
     <div className="container mx-auto">
-      <h1 className="pt-12 leading-tight text-xl font-semibold">
-        Decision Maker
-      </h1>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5 mb-3">
         <div className="flex justify-between pt-8 items-center">
           <SearchInput search={search} setSearch={setSearch} />
           <CreateDecisionDialog handleSubmitSuccess={handleSubmitSuccess} />
@@ -104,7 +101,7 @@ export default function DecisionPage() {
 
 function CardComponentGrid({ decision }: { decision: Decision[] }) {
   return (
-    <div className="grid grid-cols-4 gap-5 w-full">
+    <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 px-2 md:px-0 gap-5 w-full">
       {decision?.map((d) => (
         <CardComponent data={d} key={d?.id} />
       ))}

@@ -33,7 +33,7 @@ export default function PaginationComponent({
       ? Array.from({ length: totalPages }, (_, i) => i + 1)
       : Array.from({ length: 3 }, (_, i) => Math.min(page, totalPages - 2) + i);
 
-  if (meta?.page === 1) return;
+  if (meta?.totalPages === 1) return;
   return (
     <Pagination className="justify-end">
       <PaginationContent className="max-w-3xl">

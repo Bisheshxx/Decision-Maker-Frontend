@@ -40,7 +40,7 @@ export default function AvatarDropdown() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <div className="relative cursor-pointer">
-          <AvatarIcon src={data?.profilePictureUrl} />
+          <AvatarIcon src={data?.profilePictureUrl} name={data?.name} />
           <div className="absolute z-10 top-5 -right-0.75 rounded-full border-2 border-black bg-gray-600">
             <ChevronDown size={15} />
           </div>
@@ -50,7 +50,7 @@ export default function AvatarDropdown() {
         <DropdownMenuGroup>
           <DropdownMenuLabel>
             <div className="flex items-center gap-2">
-              <AvatarIcon src="https://github.com/shadcn.png" />
+              <AvatarIcon src={data?.profilePictureUrl} name={data?.name} />
               <div className="flex flex-col gap-0">
                 <h1 className="capitalize">{data?.name}</h1>
                 <span className="text-xs">{data?.email}</span>
@@ -69,7 +69,13 @@ export default function AvatarDropdown() {
   );
 }
 
-function AvatarIcon({ src }: { src?: string | null }) {
+function AvatarIcon({
+  src,
+  name,
+}: {
+  src?: string | null;
+  name: string | undefined;
+}) {
   const [isAvatarLoading, setIsAvatarLoading] = React.useState(true);
   return (
     <Avatar>
@@ -85,7 +91,7 @@ function AvatarIcon({ src }: { src?: string | null }) {
         </div>
       ) : null}
       <AvatarFallback className="bg-primary text-foreground">
-        {getNameInitials("testing")}
+        {getNameInitials(name)}
       </AvatarFallback>
     </Avatar>
   );
