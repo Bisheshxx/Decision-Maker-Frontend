@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Controller, Form, useFieldArray, useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { SchemaUpsertDecisionItem } from "../Schema/decision-item.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -12,7 +12,7 @@ import { useParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
-import { Field } from "@/components/ui/field";
+import { Field, FieldError } from "@/components/ui/field";
 import LoadingButtonComponent from "@/shared/components/LoadingButtonComponent";
 import { useApiMutation } from "@/shared/hooks/useApiMutation";
 import useUiState from "@/store/ui.store";
@@ -61,26 +61,31 @@ export default function CreateDecisionItemForm() {
     await UpsertDecisionItem.mutateAsync(data.DecisionItems);
   };
 
+  console.log(form.formState.errors);
+
   return (
     <form
       id="form-upsert-decision-items"
       onSubmit={form.handleSubmit(handleCreate)}
       className="flex-col flex"
     >
-      <div className="space-y-2 h-80 overflow-y-scroll">
+      <div className="space-y-2 h-80 overflow-y-scroll mb-3">
         {fields.map((_, index) => (
           <div className="flex gap-1" key={`add-option-${index}`}>
             <div className="flex-1">
               <Controller
                 name={`DecisionItems.${index}.title`}
                 control={form.control}
-                render={({ field }) => (
-                  <Field>
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid || undefined}>
                     <Input
                       {...field}
                       placeholder="e.g. Chicken Salad"
                       className="bg-background"
+                      id={`DecisionItems.${index}.title`}
+                      aria-invalid={fieldState.invalid || undefined}
                     />
+                    <FieldError errors={[fieldState.error]} />
                   </Field>
                 )}
               />
@@ -91,7 +96,7 @@ export default function CreateDecisionItemForm() {
               variant={"ghost"}
               onClick={() => remove(index)}
             >
-              <Trash color="red" />
+              <Trash className="stroke-red-400" />
             </Button>
           </div>
         ))}
@@ -112,6 +117,7 @@ export default function CreateDecisionItemForm() {
       <LoadingButtonComponent
         isLoading={form.formState.isSubmitting}
         text="Submit"
+        className="mt-2"
       />
     </form>
   );
