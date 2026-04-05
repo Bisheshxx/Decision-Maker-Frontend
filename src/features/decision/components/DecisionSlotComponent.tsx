@@ -1,8 +1,12 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { motion, useAnimation } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { DecisionItem } from "../types/decision.types";
+import {
+  DECISION_ITEM_LENGTH,
+  MOBILE_DECISION_ITEM_LENGTH,
+} from "../constants";
 
 interface IProps {
   options: Pick<DecisionItem, "id" | "title">[]; //DecisionItems
@@ -20,6 +24,7 @@ export default function DecisionSlotComponent({
   const CENTER_OFFSET = Math.floor(visibleItems / 2);
   const controls = useAnimation();
   const [isSpinning, setIsSpinning] = useState(false);
+  const [optionLength, setOptionLength] = useState(DECISION_ITEM_LENGTH);
   const [centerOption, setCenterOption] = useState<Pick<
     DecisionItem,
     "id" | "title"
@@ -42,6 +47,20 @@ export default function DecisionSlotComponent({
 
     return () => observer.disconnect();
   }, []);
+
+  const checkIsMobile = useCallback(() => {
+    if (window.innerWidth < 768) {
+      setOptionLength(MOBILE_DECISION_ITEM_LENGTH);
+    } else {
+      setOptionLength(DECISION_ITEM_LENGTH);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    checkIsMobile();
+    window.addEventListener("resize", checkIsMobile);
+    return () => window.removeEventListener("resize", checkIsMobile);
+  }, [checkIsMobile]);
 
   const startSpin = async () => {
     if (isSpinning || !options.length) return;

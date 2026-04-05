@@ -135,7 +135,7 @@
 }
 
 @theme {
-  --container: 24rem; /* small container */
+  --container: 22rem; /* small container */
   --container-md: 32rem; /* medium */
   --container-lg: 48rem; /* large */
   --container-xl: 64rem; /* extra large */

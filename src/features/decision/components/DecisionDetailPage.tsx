@@ -16,6 +16,11 @@ import { useParams, useRouter } from "next/navigation";
 import CustomDialog from "@/shared/components/CustomDialog";
 import CreateDecisionItemForm from "../Forms/create-decision-item";
 import { DASHBOARD_ROUTE } from "@/shared/constant/routes";
+import {
+  DECISION_ITEM_LENGTH,
+  MOBILE_DECISION_ITEM_LENGTH,
+} from "../constants";
+import { useCallback, useEffect, useState } from "react";
 
 interface IProps {
   id: string;
@@ -24,17 +29,38 @@ interface IProps {
 const SLOWDOWN_SPEED = 4; // Seconds the spin lasts
 
 export default function DecisionDetailPage({ id }: IProps) {
+  const [optionLength, setOptionLength] = useState(() => {
+    if (typeof window === "undefined") return DECISION_ITEM_LENGTH;
+    return window.innerWidth < 768
+      ? MOBILE_DECISION_ITEM_LENGTH
+      : DECISION_ITEM_LENGTH;
+  });
   const { data, isLoading, isError } = useApiQuery({
     queryFn: () => DecisionService.getDecisionDetails(id),
     queryKey: ["decision-detail", id],
   });
+
+  const checkIsMobile = useCallback(() => {
+    const nextLength =
+      window.innerWidth < 768
+        ? MOBILE_DECISION_ITEM_LENGTH
+        : DECISION_ITEM_LENGTH;
+    setOptionLength((currentLength) =>
+      currentLength === nextLength ? currentLength : nextLength,
+    );
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("resize", checkIsMobile);
+    return () => window.removeEventListener("resize", checkIsMobile);
+  }, [checkIsMobile]);
 
   //todo
   if (isLoading) return;
   if (isError) return;
 
   return (
-    <div className="container mx-auto pt-2 px-1">
+    <div className="mx-auto w-full  px-2 pt-2 container md:px-1">
       <div className="flex justify-between">
         <TitleDescription data={data} />
         <div className="md:mt-2.5 flex flex-wrap gap-1 md:gap-2 justify-center item-end">
@@ -48,14 +74,14 @@ export default function DecisionDetailPage({ id }: IProps) {
           {data?.createdAt ? getDateRelativeNZ(data.createdAt) : "n/a"}
         </Badge>
         <Badge>
-          Last Updated:
+          Updated:
           {data?.updatedAt ? getDateRelativeNZ(data.updatedAt) : "n/a"}
         </Badge>
       </div>
       {data && data?.decisionItems.length > 0 ? (
         <DecisionSlotComponent
           options={data?.decisionItems ?? []}
-          visibleItems={17}
+          visibleItems={optionLength}
           speed={SLOWDOWN_SPEED}
         />
       ) : (
@@ -121,7 +147,7 @@ function TitleDescription({ data }: { data: DecisionDetail | undefined }) {
         value={data?.title || "Untitled"}
         mutation={mutateAction}
         name="title"
-        className="text-xl"
+        className="md:text-xl text-md"
       />
       <BorderLessInput
         value={data?.description || ""}

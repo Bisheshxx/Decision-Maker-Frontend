@@ -11,3 +11,6 @@ export const DECISION_URL_DEFAULTS_MOBILE: DecisionUrlDefaults = {
   pageSize: MOBILE_PAGE_SIZE,
   searchTerm: "",
 };
+
+export const DECISION_ITEM_LENGTH = 15;
+export const MOBILE_DECISION_ITEM_LENGTH = 9;

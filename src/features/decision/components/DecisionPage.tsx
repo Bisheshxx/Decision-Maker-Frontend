@@ -66,9 +66,9 @@ export default function DashboardPage() {
   }, [debouncedSearch, setUrlState, searchTerm]);
 
   return (
-    <div className="container mx-auto">
+    <div className="mx-auto w-full  px-4 pt-3 container md:px-1">
       <div className="flex flex-col gap-5 mb-3">
-        <div className="flex justify-between pt-8 items-center">
+        <div className="flex justify-between items-center">
           <SearchInput search={search} setSearch={setSearch} />
           <CreateDecisionDialog handleSubmitSuccess={handleSubmitSuccess} />
         </div>
@@ -101,7 +101,7 @@ export default function DashboardPage() {
 
 function CardComponentGrid({ decision }: { decision: Decision[] }) {
   return (
-    <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 px-2 md:px-0 gap-5 w-full">
+    <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1  gap-5 w-full">
       {decision?.map((d) => (
         <CardComponent data={d} key={d?.id} />
       ))}
