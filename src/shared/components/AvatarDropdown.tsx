@@ -41,7 +41,7 @@ export default function AvatarDropdown() {
       <DropdownMenuTrigger asChild>
         <div className="relative cursor-pointer">
           <AvatarIcon src={data?.profilePictureUrl} name={data?.name} />
-          <div className="absolute z-10 top-5 -right-0.75 rounded-full border-2 border-black bg-gray-600">
+          <div className="absolute z-10 top-5 -right-0.75 rounded-full border-2 dark:border-black dark:bg-gray-600 bg-muted">
             <ChevronDown size={15} />
           </div>
         </div>
@@ -90,7 +90,7 @@ function AvatarIcon({
           <Loader2 className="size-4 animate-spin text-muted-foreground" />
         </div>
       ) : null}
-      <AvatarFallback className="bg-primary text-foreground">
+      <AvatarFallback className="bg-primary text-white dark:text-black">
         {getNameInitials(name)}
       </AvatarFallback>
     </Avatar>

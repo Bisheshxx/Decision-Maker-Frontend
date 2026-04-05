@@ -21,7 +21,7 @@ import CreateDecisionForm from "../Forms/create-decision";
 import CustomDialog from "@/shared/components/CustomDialog";
 import { Plus } from "lucide-react";
 
-export default function DecisionPage() {
+export default function DashboardPage() {
   const { urlState, setUrlState, resetUrlState } = useDecisionUrlState();
   const { page, pageSize, searchTerm } = urlState;
   const [search, setSearch] = useState(searchTerm || "");
