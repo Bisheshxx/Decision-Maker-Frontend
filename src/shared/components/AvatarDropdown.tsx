@@ -1,4 +1,4 @@
-import React from "react";
+import React, { JSX } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, Loader2 } from "lucide-react";
+import { ChevronDown, Loader2, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";
 import { useApiMutation } from "../hooks/useApiMutation";
@@ -36,6 +36,18 @@ export default function AvatarDropdown() {
     queryKey: ["profile"],
   });
 
+  const options: {
+    option: string;
+    icon: JSX.Element;
+    onClick: () => Promise<void>;
+  }[] = [
+    {
+      option: "Log out",
+      icon: <LogOut />,
+      onClick: handleLogout,
+    },
+  ];
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -61,8 +73,13 @@ export default function AvatarDropdown() {
           <DropdownMenuItem>Settings</DropdownMenuItem> */}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
+
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
+          {options.map((_, index) => (
+            <DropdownMenuItem key={index} onClick={_.onClick}>
+              {_.icon} {_.option}
+            </DropdownMenuItem>
+          ))}
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
