@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import LoadingButtonComponent from "@/shared/components/LoadingButtonComponent";
 import Link from "next/link";
 import { googleLogin } from "@/shared/lib/auth/google-login";
+import { LOGIN_ROUTE } from "@/shared/constant/routes";
 
 interface IProps {
   handleRegister: (data: z.infer<typeof SchemaRegister>) => Promise<void>;
@@ -140,7 +141,7 @@ export default function RegisterForm({ handleRegister, form }: IProps) {
             text="Register"
           />
           <FieldDescription className="text-center">
-            Already have an account? <Link href="/login">Sign in</Link>
+            Already have an account? <Link href={LOGIN_ROUTE}>Sign in</Link>
           </FieldDescription>
           <FieldDescription className="text-center text-xs ">
             By continuing, you agree to Decision Maker&apos;s Terms of Service

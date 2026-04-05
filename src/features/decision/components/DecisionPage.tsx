@@ -1,6 +1,5 @@
 "use client";
 import CardComponent from "@/shared/components/CardComponent";
-import { CreateDecisionDialog } from "./CreateDecisionDialog";
 import SearchInput from "@/shared/components/Search/SearchInput";
 import { DecisionService } from "../services/decision-services";
 import { Decision } from "../types/decision.types";
@@ -12,6 +11,15 @@ import PaginationComponent from "@/shared/components/PaginationComponent";
 import { ApiStatusHandler } from "@/shared/lib/ApiStatusHandler";
 import { Button } from "@/components/ui/button";
 import { useApiQuery } from "@/shared/hooks/useApiQuery";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import z from "zod";
+import { SchemaCreateDecision } from "../Schema/create-decision.schema";
+import { useApiMutation } from "@/shared/hooks/useApiMutation";
+import { toServerFieldError } from "@/shared/lib/hook-form-utils/index.util";
+import CreateDecisionForm from "../Forms/create-decision";
+import CustomDialog from "@/shared/components/CustomDialog";
+import { Plus } from "lucide-react";
 
 export default function DecisionPage() {
   const { urlState, setUrlState, resetUrlState } = useDecisionUrlState();
@@ -68,7 +76,6 @@ export default function DecisionPage() {
           <CreateDecisionDialog handleSubmitSuccess={handleSubmitSuccess} />
         </div>
         <ApiStatusHandler
-          // className="min-h-[70vh] flex justify-center items-center"
           className="min-h-[70vh]"
           isLoading={isLoading}
           isError={isError}
@@ -102,5 +109,58 @@ function CardComponentGrid({ decision }: { decision: Decision[] }) {
         <CardComponent data={d} key={d?.id} />
       ))}
     </div>
+  );
+}
+
+function CreateDecisionDialog({
+  handleSubmitSuccess,
+}: {
+  handleSubmitSuccess: () => void;
+}) {
+  // const handleCreate = async (data: z.infer<typeof SchemaCreateDecision>) => {};
+  const form = useForm<z.infer<typeof SchemaCreateDecision>>({
+    resolver: zodResolver(SchemaCreateDecision),
+    defaultValues: {
+      title: "",
+      description: "",
+    },
+  });
+
+  const handleSuccess = () => {
+    // setOpenDialogName(null);
+    handleSubmitSuccess();
+    form.reset();
+    // resetUrlState(["page", "searchTerm"]);
+  };
+
+  const CreateDecision = useApiMutation(DecisionService.createDecision, {
+    onSuccess: handleSuccess,
+    invalidateQueries: ["decisions"],
+    onError: (error) => {
+      form.setError("title", toServerFieldError(error));
+    },
+  });
+
+  const handleCreate = useCallback(
+    async (data: z.infer<typeof SchemaCreateDecision>) => {
+      await CreateDecision.mutateAsync(data);
+    },
+    [CreateDecision],
+  );
+  return (
+    <CustomDialog
+      button={
+        <Button className="custom-button">
+          <Plus />
+          <span className="hidden md:block">New Decision</span>
+        </Button>
+      }
+      title="Create a New Decision"
+      description="Create a decision to help you choose between multiple options.Give it a clear title and description."
+      width="max-w-sm sm:max-w-sm"
+      dialogName="create-decision"
+    >
+      <CreateDecisionForm form={form} handleCreate={handleCreate} />
+    </CustomDialog>
   );
 }

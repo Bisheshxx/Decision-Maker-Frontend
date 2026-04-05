@@ -10,7 +10,7 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { cn } from "@/shared/lib/utils";
+import { cn } from "@/lib/utils";
 import RegisterForm from "../forms/register-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";

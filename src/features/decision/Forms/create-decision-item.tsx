@@ -97,7 +97,7 @@ export default function CreateDecisionItemForm() {
         ))}
         <Button
           type="button"
-          className="mt-2 h-7.5 text-xs"
+          className="custom-button"
           onClick={() => append({ id: 0, title: "" })}
         >
           Add Value

@@ -15,6 +15,7 @@ import CustomDropdown from "@/shared/components/CustomDropdown";
 import { useParams, useRouter } from "next/navigation";
 import CustomDialog from "@/shared/components/CustomDialog";
 import CreateDecisionItemForm from "../Forms/create-decision-item";
+import { DASHBOARD_ROUTE } from "@/shared/constant/routes";
 
 interface IProps {
   id: string;
@@ -70,8 +71,8 @@ function AddDecisionItem() {
   return (
     <CustomDialog
       button={
-        <Button>
-          <span className="hidden md:block">Add Options</span>
+        <Button className="custom-button">
+          <span className=" hidden md:block">Add Options</span>
           <Plus className="" />
         </Button>
       }
@@ -141,31 +142,33 @@ function Dropdown({ data }: { data: DecisionDetail | undefined }) {
     () => DecisionService.deleteDecision(params.id),
     {
       onSuccess: () => {
-        router.push("/");
+        router.push(DASHBOARD_ROUTE);
       },
     },
   );
+
+  const actions = [
+    {
+      action: "delete",
+      fn: async () => {
+        await deleteDecision.mutateAsync(params.id);
+      },
+      dialogContent: {
+        title: "Delete",
+        description: `Are you sure you want to delete "${data?.title}"`,
+      },
+      icon: <Trash size={15} />,
+      color: "red",
+    },
+  ];
   return (
     <CustomDropdown
       trigger={
-        <Button variant={"ghost"}>
+        <Button className="custom-button" variant={"ghost"}>
           <Settings />
         </Button>
       }
-      actions={[
-        {
-          action: "delete",
-          fn: async () => {
-            await deleteDecision.mutateAsync(params.id);
-          },
-          dialogContent: {
-            title: "Delete",
-            description: `Are you sure you want to delete "${data?.title}"`,
-          },
-          icon: <Trash size={15} />,
-          color: "red",
-        },
-      ]}
+      actions={actions}
     />
   );
 }

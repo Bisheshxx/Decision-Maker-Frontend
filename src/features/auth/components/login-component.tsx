@@ -11,13 +11,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { cn } from "@/shared/lib/utils";
+import { cn } from "@/lib/utils";
 import { LoginForm } from "../forms/login-form";
 import { useForm } from "react-hook-form";
 import { useApiMutation } from "@/shared/hooks/useApiMutation";
 import { AuthenticationService } from "../services/authentication-service";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { DASHBOARD_ROUTE, LOGIN_ROUTE } from "@/shared/constant/routes";
 
 export default function LoginComponent() {
   const router = useRouter();
@@ -27,7 +28,7 @@ export default function LoginComponent() {
     if (searchParams.get("code") === "401") {
       const timer = window.setTimeout(() => {
         toast.error("Please login to continue");
-        window.history.replaceState({}, "", "/login");
+        window.history.replaceState({}, "", LOGIN_ROUTE);
       }, 50);
 
       return () => window.clearTimeout(timer);
@@ -35,7 +36,7 @@ export default function LoginComponent() {
   }, [router, searchParams]);
 
   const Login = useApiMutation(AuthenticationService.login, {
-    onSuccess: () => router.push("/"),
+    onSuccess: () => router.push(DASHBOARD_ROUTE),
     onError: (error) =>
       form.setError("root", {
         type: "server",

@@ -13,3 +13,21 @@ export const toServerFieldError = (error: ApiErrorHandler) => {
       "Unable to create decision. Please try again.",
   };
 };
+
+export const getNameInitials = (value?: string | null): string => {
+  if (typeof value !== "string") {
+    return "N/A";
+  }
+
+  const normalized = value.trim();
+  if (!normalized) {
+    return "N/A";
+  }
+
+  const parts = normalized.split(/\s+/);
+  if (parts.length === 1) {
+    return parts[0].charAt(0).toUpperCase();
+  }
+
+  return `${parts[0].charAt(0)}${parts[1].charAt(0)}`.toUpperCase();
+};

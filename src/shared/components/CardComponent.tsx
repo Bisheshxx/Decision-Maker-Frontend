@@ -13,6 +13,7 @@ import { ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { formatRelativeOrNZDate } from "../lib/date-utils/date.util";
+import { SINGLE_DECISION_ROUTE } from "../constant/routes";
 
 interface IProps {
   data: Decision;
@@ -21,7 +22,7 @@ interface IProps {
 export default function CardComponent({ data }: IProps) {
   const router = useRouter();
   const handleClick = () => {
-    router.push(`decision/${data?.id}`);
+    router.push(`${SINGLE_DECISION_ROUTE}/${data?.id}`);
   };
   return (
     <Card

@@ -6,6 +6,7 @@ import { AuthenticationService } from "../services/authentication-service";
 import { ApiStatusHandler } from "@/shared/lib/ApiStatusHandler";
 import { CircleCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LOGIN_ROUTE } from "@/shared/constant/routes";
 
 export default function ConfirmEmailPage() {
   const searchParams = useSearchParams();
@@ -39,7 +40,10 @@ export default function ConfirmEmailPage() {
         isSuccess={isSuccess}
         error={error?.response?.message}
         button={
-          <Button variant={"destructive"} onClick={() => router.push("/login")}>
+          <Button
+            variant={"destructive"}
+            onClick={() => router.push(LOGIN_ROUTE)}
+          >
             Back to Login
           </Button>
         }
@@ -49,7 +53,10 @@ export default function ConfirmEmailPage() {
           <p className="text-xl font-extralight">
             Email has been successfully Confirmed
           </p>
-          <Button variant={"destructive"} onClick={() => router.push("/login")}>
+          <Button
+            variant={"destructive"}
+            onClick={() => router.push(LOGIN_ROUTE)}
+          >
             Login
           </Button>
         </div>

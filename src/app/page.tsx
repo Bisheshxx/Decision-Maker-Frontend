@@ -1,10 +1,6 @@
-import DecisionPage from "@/features/decision/components/DecisionPage";
-import { Suspense } from "react";
+import { DASHBOARD_ROUTE } from "@/shared/constant/routes";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return (
-    <Suspense fallback={null}>
-      <DecisionPage />
-    </Suspense>
-  );
+  redirect(DASHBOARD_ROUTE);
 }

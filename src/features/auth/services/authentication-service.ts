@@ -39,8 +39,8 @@ export const AuthenticationService = {
       method: "POST",
       url: "accounts/logout",
     }),
-  getProfile: async (): Promise<ApiResponse<null>> =>
-    request<null>({
+  getProfile: async (): Promise<ApiResponse<User>> =>
+    request<User>({
       method: "GET",
       url: "accounts/profile",
     }),
