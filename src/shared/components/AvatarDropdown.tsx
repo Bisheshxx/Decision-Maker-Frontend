@@ -8,14 +8,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, Loader2, LogOut } from "lucide-react";
+import { ChevronDown, Loader2, LogOut, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";
 import { useApiMutation } from "../hooks/useApiMutation";
 import { AuthenticationService } from "@/features/auth/services/authentication-service";
-import { LOGIN_ROUTE } from "../constant/routes";
+import { LOGIN_ROUTE, PROFILE_ROUTE } from "../constant/routes";
 import { useApiQuery } from "../hooks/useApiQuery";
 import { getNameInitials } from "../lib/hook-form-utils/index.util";
+import { AvatarIcon } from "./AvatarIcon";
 
 export default function AvatarDropdown() {
   const router = useRouter();
@@ -39,8 +40,13 @@ export default function AvatarDropdown() {
   const options: {
     option: string;
     icon: JSX.Element;
-    onClick: () => Promise<void>;
+    onClick: () => void;
   }[] = [
+    {
+      option: "Profile",
+      icon: <User />,
+      onClick: () => router.push(PROFILE_ROUTE),
+    },
     {
       option: "Log out",
       icon: <LogOut />,
@@ -83,33 +89,5 @@ export default function AvatarDropdown() {
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
-}
-
-function AvatarIcon({
-  src,
-  name,
-}: {
-  src?: string | null;
-  name: string | undefined;
-}) {
-  const [isAvatarLoading, setIsAvatarLoading] = React.useState(true);
-  return (
-    <Avatar>
-      <AvatarImage
-        src={src ?? undefined}
-        onLoadingStatusChange={(status) => {
-          setIsAvatarLoading(status === "loading");
-        }}
-      />
-      {isAvatarLoading ? (
-        <div className="absolute inset-0 flex items-center justify-center rounded-full bg-muted">
-          <Loader2 className="size-4 animate-spin text-muted-foreground" />
-        </div>
-      ) : null}
-      <AvatarFallback className="bg-primary text-white dark:text-black">
-        {getNameInitials(name)}
-      </AvatarFallback>
-    </Avatar>
   );
 }

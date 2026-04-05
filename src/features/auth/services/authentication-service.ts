@@ -44,9 +44,12 @@ export const AuthenticationService = {
       method: "GET",
       url: "accounts/profile",
     }),
-  updateProfile: async (): Promise<ApiResponse<null>> =>
-    request<null>({
+  updateProfile: async (
+    data: Partial<Pick<User, "name" | "profilePictureUrl">>,
+  ): Promise<ApiResponse<User>> =>
+    request<User>({
       method: "PUT",
-      url: "api/accounts",
+      url: "accounts",
+      data,
     }),
 };

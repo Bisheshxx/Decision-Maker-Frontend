@@ -13,12 +13,10 @@ import {
 import { cn } from "@/lib/utils";
 import RegisterForm from "../forms/register-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { useApiMutation } from "@/shared/hooks/useApiMutation";
 import { AuthenticationService } from "../services/authentication-service";
 
 export default function RegisterComponent() {
-  const router = useRouter();
   const Register = useApiMutation(AuthenticationService.register, {
     onSuccess: () => {
       console.log("success do the re-route");
