@@ -116,7 +116,7 @@ export default function DecisionSlotComponent({
           <div className="flex-1" />
           <div
             style={{ height: itemHeight }}
-            className="w-full flex items-center justify-center border-y border-border bg-zinc-950 text-zinc-50 dark:bg-zinc-50 dark:text-zinc-900 font-semibold rounded-xl md:text-[16px] text-xs capitalize"
+            className="w-full flex items-center justify-center border-y border-border bg-primary text-zinc-50  dark:text-zinc-900 font-semibold rounded-xl md:text-[16px] text-xs capitalize"
           >
             {displayedCenterOption?.title ?? "No options"}
           </div>

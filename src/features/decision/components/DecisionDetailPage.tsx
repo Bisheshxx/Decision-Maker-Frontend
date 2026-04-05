@@ -124,11 +124,11 @@ function TitleDescription({ data }: { data: DecisionDetail | undefined }) {
         className="text-xl"
       />
       <BorderLessInput
-        value={data?.description || "Untitled"}
+        value={data?.description || ""}
         mutation={mutateAction}
         type="TextArea"
         name="description"
-        placeholder="Add a description"
+        placeholder="Add a description..."
         className="md:text-sm md:w-96 text-[14px]"
       />
     </div>
