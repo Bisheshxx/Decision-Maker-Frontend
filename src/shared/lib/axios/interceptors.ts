@@ -10,22 +10,12 @@ type RetryableRequestConfig = {
 const REFRESH_TOKEN_URL =
   process.env.NEXT_PUBLIC_REFRESH_TOKEN_PATH || "accounts/refresh-token";
 
-let isRefreshing = false;
-let refreshPromise: Promise<void> | null = null;
 let responseInterceptorId: number | null = null;
 
 const redirectToLogin = () => {
   if (typeof window === "undefined") return;
   if (window.location.pathname === LOGIN_ROUTE) return;
   window.location.href = "/login?code=401";
-};
-
-const refreshAccessToken = async () => {
-  await api.request({
-    method: "POST",
-    url: REFRESH_TOKEN_URL,
-    skipAuthRefresh: true,
-  } as RetryableRequestConfig);
 };
 
 export const setupInterceptors = () => {
@@ -38,36 +28,29 @@ export const setupInterceptors = () => {
         | RetryableRequestConfig
         | undefined;
       const status = error?.response?.status;
+      const isLoginRequest = originalRequest?.url?.includes("accounts/login");
 
       if (
         status !== 401 ||
         !originalRequest ||
         originalRequest.skipAuthRefresh
       ) {
-        return Promise.reject(error);
+        return Promise.reject(error.response);
       }
 
-      if (
-        originalRequest._retry ||
-        originalRequest.url?.includes(REFRESH_TOKEN_URL)
-      ) {
+      if (isLoginRequest) {
+        return Promise.reject(error.response);
+      }
+
+      if (originalRequest._retry) {
         redirectToLogin();
-        return Promise.reject(error);
+        return Promise.reject(error.response);
       }
 
       originalRequest._retry = true;
 
       try {
-        if (!isRefreshing) {
-          isRefreshing = true;
-          refreshPromise = refreshAccessToken().finally(() => {
-            isRefreshing = false;
-            refreshPromise = null;
-          });
-        }
-
-        await refreshPromise;
-        return api.request(originalRequest);
+        return await api.request(originalRequest);
       } catch (refreshError) {
         redirectToLogin();
         return Promise.reject(refreshError);
