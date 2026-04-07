@@ -10,7 +10,7 @@ import { getDateRelativeNZ } from "@/shared/lib/date-utils/date.util";
 import { Badge } from "@/components/ui/badge";
 import DecisionSlotComponent from "./DecisionSlotComponent";
 import { Button } from "@/components/ui/button";
-import { Plus, Settings, Trash } from "lucide-react";
+import { Delete, Plus, Settings, Trash } from "lucide-react";
 import CustomDropdown from "@/shared/components/CustomDropdown";
 import { useParams, useRouter } from "next/navigation";
 import CustomDialog from "@/shared/components/CustomDialog";
@@ -21,9 +21,21 @@ import {
   MOBILE_DECISION_ITEM_LENGTH,
 } from "../constants";
 import { useCallback, useEffect, useState } from "react";
+import useUiState from "@/store/ui.store";
 
 interface IProps {
   id: string;
+}
+
+interface Actions {
+  action: string;
+  fn: (...args: any[]) => void;
+  dialogContent: {
+    title: string;
+    description: string;
+  };
+  icon?: React.ReactElement;
+  color?: string;
 }
 
 const SLOWDOWN_SPEED = 4; // Seconds the spin lasts
@@ -65,7 +77,7 @@ export default function DecisionDetailPage({ id }: IProps) {
         <TitleDescription data={data} />
         <div className="md:mt-2.5 flex flex-wrap gap-1 md:gap-2 justify-center item-end">
           <AddDecisionItem />
-          <Dropdown data={data} />
+          <DeleteIcon data={data} />
         </div>
       </div>
       <div className="flex gap-2 mt-4 md:w-auto w-full">
@@ -161,7 +173,8 @@ function TitleDescription({ data }: { data: DecisionDetail | undefined }) {
   );
 }
 
-function Dropdown({ data }: { data: DecisionDetail | undefined }) {
+function DeleteIcon({ data }: { data: DecisionDetail | undefined }) {
+  const [selectedAction, setSelectedAction] = useState<Actions | null>(null);
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const deleteDecision = useApiMutation(
@@ -172,9 +185,9 @@ function Dropdown({ data }: { data: DecisionDetail | undefined }) {
       },
     },
   );
-
-  const actions = [
-    {
+  const { setOpenDialogName } = useUiState();
+  const handleOnclick = () => {
+    setSelectedAction({
       action: "delete",
       fn: async () => {
         await deleteDecision.mutateAsync(params.id);
@@ -185,16 +198,91 @@ function Dropdown({ data }: { data: DecisionDetail | undefined }) {
       },
       icon: <Trash size={15} />,
       color: "red",
-    },
-  ];
+    });
+    setOpenDialogName("action-confirmation");
+  };
+  const handleCancel = () => {
+    // setSelectedAction(null);
+    setOpenDialogName(null);
+  };
+  // const actions = [
+  //   {
+  //     action: "delete",
+  //     fn: async () => {
+  //       await deleteDecision.mutateAsync(params.id);
+  //     },
+  //     dialogContent: {
+  //       title: "Delete",
+  //       description: `Are you sure you want to delete "${data?.title}"`,
+  //     },
+  //     icon: <Trash size={15} />,
+  //     color: "red",
+  //   },
+  // ];
+  // return (
+  //   <>
+  //     <CustomDropdown
+  //       trigger={
+  //         <Button className="custom-button" variant={"ghost"}>
+  //           <Settings />
+  //         </Button>
+  //       }
+  //       actions={actions}
+  //     />
+  //     <>
+  //       {selectedAction && (
+  //         <ActionDialog action={selectedAction} handleCancel={handleCancel} />
+  //       )}
+  //       <Button
+  //         className="custom-button"
+  //         variant={"ghost"}
+  //         onClick={handleOnclick}
+  //       >
+  //         <Trash size={15} />
+  //       </Button>
+  //     </>
+  //   </>
+  // );
   return (
-    <CustomDropdown
-      trigger={
-        <Button className="custom-button" variant={"ghost"}>
-          <Settings />
+    <>
+      {selectedAction && (
+        <ActionDialog action={selectedAction} handleCancel={handleCancel} />
+      )}
+      <Button
+        className="custom-button"
+        variant={"ghost"}
+        onClick={handleOnclick}
+      >
+        <Trash size={15} className="stroke-red-400" />
+      </Button>
+    </>
+  );
+}
+
+function ActionDialog({
+  action,
+  handleCancel,
+}: {
+  action: Actions;
+  handleCancel: () => void;
+}) {
+  const handleAction = () => {
+    action.fn();
+    handleCancel();
+  };
+  return (
+    <CustomDialog
+      title={action?.dialogContent?.title}
+      description={action?.dialogContent?.description}
+      width="max-w-sm sm:max-w-sm"
+      dialogName="action-confirmation"
+    >
+      <div className="flex justify-end gap-4">
+        <Button onClick={handleAction}>Yes</Button>
+        <Button onClick={handleCancel} variant={"destructive"}>
+          No
         </Button>
-      }
-      actions={actions}
-    />
+      </div>
+    </CustomDialog>
   );
 }

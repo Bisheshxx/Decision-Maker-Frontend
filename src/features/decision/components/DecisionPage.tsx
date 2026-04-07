@@ -19,7 +19,7 @@ import { useApiMutation } from "@/shared/hooks/useApiMutation";
 import { toServerFieldError } from "@/shared/lib/hook-form-utils/index.util";
 import CreateDecisionForm from "../Forms/create-decision";
 import CustomDialog from "@/shared/components/CustomDialog";
-import { Plus } from "lucide-react";
+import { Ban, Plus } from "lucide-react";
 
 export default function DashboardPage() {
   const { urlState, setUrlState, resetUrlState } = useDecisionUrlState();
@@ -84,7 +84,11 @@ export default function DashboardPage() {
             </Button>
           }
         >
-          <CardComponentGrid decision={response || []} />
+          {response && response?.length > 0 ? (
+            <CardComponentGrid decision={response || []} />
+          ) : (
+            <EmptyDecision />
+          )}
         </ApiStatusHandler>
         {meta && (
           <div className="w-full flex ">
@@ -94,6 +98,30 @@ export default function DashboardPage() {
             />
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+function EmptyDecision() {
+  const { setOpenDialogName } = useUiState();
+  return (
+    <div className="flex-center h-[70vh] flex-col gap-4">
+      <div className="flex-center flex-col gap-2">
+        <Ban size={250} className="stroke-primary" strokeWidth={0.75} />
+        <h2 className="text-3xl text-primary font-bold">No Decisions Yet.</h2>
+      </div>
+      <div className="flex-center flex-col gap-2">
+        <Button
+          className="custom-button"
+          onClick={() => setOpenDialogName("create-decision")}
+        >
+          <Plus />
+          <span className="hidden md:block">New Decision</span>
+        </Button>
+        <h2 className="text-xl text-primary font-semi-bold">
+          Create a new one?
+        </h2>
       </div>
     </div>
   );
