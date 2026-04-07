@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { Loader2, TriangleAlert } from "lucide-react";
 import React from "react";
 import { twMerge } from "tailwind-merge";

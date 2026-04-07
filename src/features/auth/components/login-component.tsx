@@ -37,11 +37,13 @@ export default function LoginComponent() {
 
   const Login = useApiMutation(AuthenticationService.login, {
     onSuccess: () => router.push(DASHBOARD_ROUTE),
-    onError: (error) =>
+    onError: (error) => {
+      console.log(error.response);
       form.setError("root", {
         type: "server",
-        message: error.response.message,
-      }),
+        message: error.response?.errors[0],
+      });
+    },
   });
   const form = useForm<z.infer<typeof SchemaLogin>>({
     resolver: zodResolver(SchemaLogin),

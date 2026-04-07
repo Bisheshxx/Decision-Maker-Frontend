@@ -15,12 +15,13 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { User } from "@/features/auth/types/user.types";
+import { ProfileService } from "../services/profile-services";
 
 interface IProps {
   data: User;
 }
 export default function ProfileUpdateForm({ data }: IProps) {
-  const Update = useApiMutation(AuthenticationService.updateProfile, {
+  const Update = useApiMutation(ProfileService.updateProfile, {
     onSuccess: () => console.log("success"),
     onError: (error) => console.log(error.response),
     invalidateQueries: ["profile"],

@@ -17,6 +17,7 @@ import { LOGIN_ROUTE, PROFILE_ROUTE } from "../constant/routes";
 import { useApiQuery } from "../hooks/useApiQuery";
 import { getNameInitials } from "../lib/hook-form-utils/index.util";
 import { AvatarIcon } from "./AvatarIcon";
+import { ProfileService } from "@/features/profile/services/profile-services";
 
 export default function AvatarDropdown() {
   const router = useRouter();
@@ -33,7 +34,7 @@ export default function AvatarDropdown() {
   };
 
   const { data } = useApiQuery({
-    queryFn: () => AuthenticationService.getProfile(),
+    queryFn: () => ProfileService.getProfile(),
     queryKey: ["profile"],
   });
 
