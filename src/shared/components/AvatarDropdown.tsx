@@ -65,19 +65,17 @@ export default function AvatarDropdown() {
           </div>
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end">
+      <DropdownMenuContent className="w-64" align="end">
         <DropdownMenuGroup>
           <DropdownMenuLabel>
             <div className="flex items-center gap-2">
               <AvatarIcon src={data?.profilePictureUrl} name={data?.name} />
               <div className="flex flex-col gap-0">
                 <h1 className="capitalize">{data?.name}</h1>
-                <span className="text-xs">{data?.email}</span>
+                <span className="text-xs truncate">{data?.email}</span>
               </div>
             </div>
           </DropdownMenuLabel>
-          {/* <DropdownMenuItem>Profile</DropdownMenuItem>
-          <DropdownMenuItem>Settings</DropdownMenuItem> */}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
 

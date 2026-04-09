@@ -16,7 +16,7 @@ export function AvatarIcon({
   return (
     <Avatar className={className}>
       <AvatarImage
-        src={src ?? undefined}
+        src={src ? src : undefined}
         onLoadingStatusChange={(status) => {
           setIsAvatarLoading(status === "loading");
         }}

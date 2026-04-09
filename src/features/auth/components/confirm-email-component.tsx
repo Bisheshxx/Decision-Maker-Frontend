@@ -16,9 +16,7 @@ export default function ConfirmEmailPage() {
 
   const { mutateAsync, isPending, isSuccess, isError, error } = useApiMutation(
     AuthenticationService.confirmEmail,
-    {
-      onSuccess: () => console.log("Success"),
-    },
+    {},
   );
 
   useEffect(() => {

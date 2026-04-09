@@ -15,6 +15,7 @@ import LoadingButtonComponent from "@/shared/components/LoadingButtonComponent";
 import Link from "next/link";
 import { googleLogin } from "@/shared/lib/auth/google-login";
 import { LOGIN_ROUTE } from "@/shared/constant/routes";
+import PasswordInput from "@/shared/components/PasswordInput";
 
 interface IProps {
   handleRegister: (data: z.infer<typeof SchemaRegister>) => Promise<void>;
@@ -103,7 +104,7 @@ export default function RegisterForm({ handleRegister, form }: IProps) {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor="form-login-password">Password</FieldLabel>
-              <Input
+              <PasswordInput
                 {...field}
                 id="password"
                 type="password"
@@ -123,7 +124,7 @@ export default function RegisterForm({ handleRegister, form }: IProps) {
               <FieldLabel htmlFor="form-login-confirm_password">
                 Confirm Password
               </FieldLabel>
-              <Input
+              <PasswordInput
                 {...field}
                 id="confirm_password"
                 type="password"
@@ -136,6 +137,11 @@ export default function RegisterForm({ handleRegister, form }: IProps) {
           )}
         />
         <Field>
+          {form.formState.errors?.root && (
+            <FieldError
+              errors={[{ message: form.formState.errors?.root?.message }]}
+            />
+          )}
           <LoadingButtonComponent
             isLoading={form.formState.isSubmitting}
             text="Register"

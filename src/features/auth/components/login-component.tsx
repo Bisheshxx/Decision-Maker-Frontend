@@ -38,10 +38,12 @@ export default function LoginComponent() {
   const Login = useApiMutation(AuthenticationService.login, {
     onSuccess: () => router.push(DASHBOARD_ROUTE),
     onError: (error) => {
-      console.log(error.response);
+      const responseErrors = error.response?.errors;
       form.setError("root", {
         type: "server",
-        message: error.response?.errors[0],
+        message: Array.isArray(responseErrors)
+          ? responseErrors[0]
+          : responseErrors,
       });
     },
   });

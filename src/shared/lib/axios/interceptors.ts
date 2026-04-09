@@ -8,7 +8,7 @@ type RetryableRequestConfig = {
 } & Record<string, any>;
 
 const REFRESH_TOKEN_URL =
-  process.env.NEXT_PUBLIC_REFRESH_TOKEN_PATH || "accounts/refresh-token";
+  process.env.NEXT_PUBLIC_REFRESH_TOKEN_PATH || "accounts/Refresh";
 
 let responseInterceptorId: number | null = null;
 
@@ -29,6 +29,8 @@ export const setupInterceptors = () => {
         | undefined;
       const status = error?.response?.status;
       const isLoginRequest = originalRequest?.url?.includes("accounts/login");
+      const isRefreshRequest =
+        originalRequest?.url?.includes(REFRESH_TOKEN_URL);
 
       if (
         status !== 401 ||
@@ -38,8 +40,9 @@ export const setupInterceptors = () => {
         return Promise.reject(error.response);
       }
 
-      if (isLoginRequest) {
-        return Promise.reject(error.response);
+      if (isLoginRequest || isRefreshRequest) {
+        redirectToLogin();
+        return Promise.reject(error);
       }
 
       if (originalRequest._retry) {
@@ -50,6 +53,12 @@ export const setupInterceptors = () => {
       originalRequest._retry = true;
 
       try {
+        await api.request({
+          method: "POST",
+          url: REFRESH_TOKEN_URL,
+          skipAuthRefresh: true,
+        } as RetryableRequestConfig);
+
         return await api.request(originalRequest);
       } catch (refreshError) {
         redirectToLogin();

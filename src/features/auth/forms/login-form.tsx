@@ -16,6 +16,7 @@ import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import LoadingButtonComponent from "@/shared/components/LoadingButtonComponent";
 import { googleLogin } from "@/shared/lib/auth/google-login";
+import PasswordInput from "@/shared/components/PasswordInput";
 
 interface IProps {
   handleLogin: (data: { email: string; password: string }) => Promise<void>;
@@ -58,7 +59,7 @@ export function LoginForm({ form, handleLogin }: IProps) {
                   Forgot your password?
                 </Link>
               </div>
-              <Input
+              <PasswordInput
                 {...field}
                 id="password"
                 type="password"

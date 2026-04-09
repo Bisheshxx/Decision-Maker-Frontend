@@ -18,11 +18,22 @@ import { AuthenticationService } from "../services/authentication-service";
 
 export default function RegisterComponent() {
   const Register = useApiMutation(AuthenticationService.register, {
-    onSuccess: () => {
-      console.log("success do the re-route");
+    onSuccess: () => {},
+    onError: (error) => {
+      const responseErrors = error.response?.errors;
+      const errorMessage = Array.isArray(responseErrors)
+        ? responseErrors[0]
+        : responseErrors;
+      form.setError("root", {
+        type: "server",
+        message:
+          typeof errorMessage === "string" && errorMessage.trim() !== ""
+            ? errorMessage
+            : error.response?.message,
+      });
     },
-    onError: (error) => console.log(error.response),
   });
+
   const form = useForm<z.infer<typeof SchemaRegister>>({
     resolver: zodResolver(SchemaRegister),
     defaultValues: {
@@ -33,7 +44,6 @@ export default function RegisterComponent() {
       confirm_password: "",
     },
   });
-
   const handleRegister = async (data: z.infer<typeof SchemaRegister>) => {
     const { first_name, last_name, confirm_password, ...restData } = data;
     await Register.mutateAsync({
