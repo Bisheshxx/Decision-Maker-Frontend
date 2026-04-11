@@ -27,6 +27,7 @@ export const useApiQuery = <
     TQueryKey
   >({
     ...options,
+    retry: false,
   });
 
   return {

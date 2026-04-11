@@ -16,6 +16,9 @@ import Link from "next/link";
 import { googleLogin } from "@/shared/lib/auth/google-login";
 import { LOGIN_ROUTE } from "@/shared/constant/routes";
 import PasswordInput from "@/shared/components/PasswordInput";
+import Image from "next/image";
+import Google from "../../../../public/google.png";
+import GoogleLoginButton from "@/shared/components/GoogleLoginButton";
 
 interface IProps {
   handleRegister: (data: z.infer<typeof SchemaRegister>) => Promise<void>;
@@ -27,14 +30,7 @@ export default function RegisterForm({ handleRegister, form }: IProps) {
     <form id="form-register" onSubmit={form.handleSubmit(handleRegister)}>
       <FieldGroup className="gap-3">
         <div className="w-full pb-5 border-b flex justify-center items-center">
-          <Button
-            variant="outline"
-            type="button"
-            disabled={form.formState.isSubmitting}
-            onClick={() => googleLogin()}
-          >
-            Sign up with Google
-          </Button>
+          <GoogleLoginButton isDisabled={form.formState.isSubmitting} />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <Controller

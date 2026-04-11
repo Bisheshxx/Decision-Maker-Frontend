@@ -17,6 +17,7 @@ import Link from "next/link";
 import LoadingButtonComponent from "@/shared/components/LoadingButtonComponent";
 import { googleLogin } from "@/shared/lib/auth/google-login";
 import PasswordInput from "@/shared/components/PasswordInput";
+import GoogleLoginButton from "@/shared/components/GoogleLoginButton";
 
 interface IProps {
   handleLogin: (data: { email: string; password: string }) => Promise<void>;
@@ -92,14 +93,7 @@ export function LoginForm({ form, handleLogin }: IProps) {
             isLoading={form.formState.isSubmitting}
             text="Login"
           />
-          <Button
-            variant="outline"
-            type="button"
-            disabled={form.formState.isSubmitting}
-            onClick={() => googleLogin()}
-          >
-            Login with Google
-          </Button>
+          <GoogleLoginButton isDisabled={form.formState.isSubmitting} />
           <FieldDescription className="text-center">
             Don&apos;t have an account? <Link href="/register">Sign up</Link>
           </FieldDescription>
