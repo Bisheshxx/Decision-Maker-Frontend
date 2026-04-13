@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, MailCheck, TriangleAlert } from "lucide-react";
 import Link from "next/link";
