@@ -22,7 +22,7 @@ export default function CardComponent({ data }: IProps) {
   const href = `${SINGLE_DECISION_ROUTE}/${data?.id}`;
 
   return (
-    <Link href={href} prefetch className="block w-full max-w-sm">
+    <Link href={href} className="block w-full max-w-sm">
       <Card className="shadow-lg group hover:cursor-pointer">
         <CardHeader>
           <CardTitle className="text-sm truncate">{data?.title}</CardTitle>
