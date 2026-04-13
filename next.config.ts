@@ -4,14 +4,17 @@ const nextConfig: NextConfig = {
   /* config options here */
   output: "standalone",
   async rewrites() {
-    return [
-      {
-        // This matches any request starting with /api
-        source: "/api/:path*",
-        // This redirects it to your .NET backend behind the scenes
-        destination: `${process.env.NEXT_PUBLIC_API_URL}/api/:path*`,
-      },
-    ];
+    return {
+      beforeFiles: [],
+      afterFiles: [
+        {
+          // Keep Next.js route handlers under /api/auth/* local.
+          source: "/api/:path((?!auth/).*)",
+          destination: `${process.env.NEXT_PUBLIC_API_URL}/api/:path`,
+        },
+      ],
+      fallback: [],
+    };
   },
 };
 

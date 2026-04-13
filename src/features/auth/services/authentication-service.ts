@@ -1,6 +1,6 @@
 import { request } from "@/shared/lib/axios/request";
 import { SchemaLogin } from "@/features/auth/schema/login.schema";
-import { User } from "../types/user.types";
+import { LoginResponse, User } from "../types/user.types";
 import z from "zod";
 import { ApiResponse } from "@/shared/types/global.types";
 import { SchemaRegister } from "../schema/register.schema";
@@ -8,8 +8,8 @@ import { SchemaRegister } from "../schema/register.schema";
 export const AuthenticationService = {
   login: async (
     data: z.infer<typeof SchemaLogin>,
-  ): Promise<ApiResponse<User>> => {
-    return request<User>({
+  ): Promise<ApiResponse<LoginResponse>> => {
+    return request<LoginResponse>({
       method: "POST",
       url: "accounts/login",
       data,

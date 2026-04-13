@@ -19,6 +19,8 @@ import { AuthenticationService } from "../services/authentication-service";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { DASHBOARD_ROUTE, LOGIN_ROUTE } from "@/shared/constant/routes";
+import { saveToken } from "@/lib/auth";
+import axios from "axios";
 
 export default function LoginComponent() {
   const router = useRouter();
@@ -36,7 +38,21 @@ export default function LoginComponent() {
   }, [router, searchParams]);
 
   const Login = useApiMutation(AuthenticationService.login, {
-    onSuccess: () => router.push(DASHBOARD_ROUTE),
+    onSuccess: async (res) => {
+      const token = res.data?.token;
+      const refreshToken = res.data?.refreshToken;
+
+      if (!token || !refreshToken) {
+        toast.error("Login failed: invalid token payload");
+        return;
+      }
+      saveToken(token);
+      await axios.post("/api/auth/set-refresh-token", {
+        refreshToken,
+      });
+      router.push(DASHBOARD_ROUTE);
+    },
+    // onSuccess: () => router.push(DASHBOARD_ROUTE),
     onError: (error) => {
       const responseErrors = error.response?.errors;
       form.setError("root", {
