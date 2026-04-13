@@ -1,36 +1,127 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Decision Maker
+
+- Frontend GitHub Repository: [<your-github-repo-url>](your-github-repo-url)https://github.com/Bisheshxx/Decision-Maker-Frontend
+- Backend GitHub Repository: [<your-github-repo-url>](your-github-repo-url)https://github.com/Bisheshxx/Decision-Maker
+- Live Demo: [<your-deployed-url>](your-deployed-url)https://decision-maker-project.vercel.app/
+
+![Decision Maker logo](public/Banner.jpeg)
+
+Decision Maker is a web application that helps users make choices faster when they are stuck between multiple options. The app lets each user create decisions, add possible options, and spin a visual selector that randomly lands on one choice.
+
+## What It Does
+
+The app is built around a simple flow: sign in, create a decision, add options, and let the app pick one for you. It also includes a dashboard for managing saved decisions and a profile area for updating account details.
+
+## Features
+
+### Authentication
+
+Users can register, log in, and confirm their email before using the app. Each account keeps its own decisions, so the experience stays private and personal.
+
+### Decision Dashboard
+
+After login, users land on a dashboard where they can browse all saved decisions. The dashboard supports search and pagination so it stays usable even with a long list of decisions.
+
+### Create Decisions
+
+Users can create a new decision by providing a title and description. This gives context for the choice they are trying to make.
+
+### Decision Detail Page
+
+Each decision has its own detail page where users can view the decision, edit the title and description inline, see creation and update timestamps, and manage the decision.
+
+### Add and Manage Options
+
+Users can add multiple options to a decision. These are the possible outcomes the app will spin through when choosing a result.
+
+### Spin-to-Choose Interaction
+
+The main interaction in the app is a spinning selector. It animates through the available options and stops on one randomly, turning indecision into a clear result.
+
+### Delete Decisions
+
+Users can remove decisions they no longer need from the detail page.
+
+### Profile Management
+
+The profile page lets users update personal information and profile details.
+
+### Password Update
+
+Users can also change their password from the profile area.
+
+### Responsive UI
+
+The interface adapts to desktop and mobile screens, including the decision spinner and dashboard layout.
+
+## Tech Stack
+
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- React Hook Form
+- Zod
+- TanStack Query
+- Zustand
+- Sonner
+- Lucide React
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js
+- pnpm
+
+### Install Dependencies
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Run Locally
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Learn More
+### Build for Production
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+pnpm build
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Start the Production Server
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+pnpm start
+```
 
-## Deploy on Vercel
+### Lint the Codebase
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+pnpm lint
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Routes
+
+- `/login` for authentication
+- `/register` for new account creation
+- `/dashboard` for the main decision list
+- `/decision/[id]` for decision details and spinning
+- `/profile` for account settings
+
+## User Flow
+
+1. Create an account or log in.
+2. Create a new decision.
+3. Add the options you are choosing between.
+4. Spin the selector to pick one option.
+5. Return later to review, edit, or delete the decision.
+
+## Notes
+
+The homepage redirects authenticated users to the dashboard, so the app is designed to be used primarily after sign-in.
