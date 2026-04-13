@@ -18,19 +18,16 @@ import { useApiQuery } from "../hooks/useApiQuery";
 import { getNameInitials } from "../lib/hook-form-utils/index.util";
 import { AvatarIcon } from "./AvatarIcon";
 import { ProfileService } from "@/features/profile/services/profile-services";
+import { clearToken } from "@/lib/auth";
+import axios from "axios";
 
 export default function AvatarDropdown() {
   const router = useRouter();
 
-  const routeToLogin = () => {
-    router.push(LOGIN_ROUTE);
-  };
-  const Logout = useApiMutation(AuthenticationService.logout, {
-    onSuccess: routeToLogin,
-    onError: routeToLogin,
-  });
   const handleLogout = async () => {
-    await Logout.mutate({});
+    clearToken();
+    await axios.post("/api/auth/logout");
+    router.push(LOGIN_ROUTE);
   };
 
   const { data } = useApiQuery({
