@@ -27,9 +27,21 @@ export default function LoginComponent() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    if (searchParams.get("code") === "401") {
+    const code = searchParams.get("code");
+    const error = searchParams.get("error");
+
+    if (code === "401") {
       const timer = window.setTimeout(() => {
         toast.error("Please login to continue");
+        window.history.replaceState({}, "", LOGIN_ROUTE);
+      }, 50);
+
+      return () => window.clearTimeout(timer);
+    }
+
+    if (error === "oauth_failed") {
+      const timer = window.setTimeout(() => {
+        toast.error("OAuth login failed");
         window.history.replaceState({}, "", LOGIN_ROUTE);
       }, 50);
 
@@ -47,7 +59,7 @@ export default function LoginComponent() {
         return;
       }
       saveToken(token);
-      await axios.post("/api/auth/set-refresh-token", {
+      await axios.post("/api/auth/set-refresh", {
         refreshToken,
       });
       router.push(DASHBOARD_ROUTE);
