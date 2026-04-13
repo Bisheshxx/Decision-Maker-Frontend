@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { RouteProgressProvider } from "@/providers/RouteProgressProvider";
 import { Toaster } from "@/components/ui/sonner";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,10 +38,12 @@ export default function RootLayout({
           disableTransitionOnChange
           themes={["light", "dark"]}
         >
-          <RouteProgressProvider>
-            {children}
-            <Toaster />
-          </RouteProgressProvider>
+          <Suspense fallback={null}>
+            <RouteProgressProvider>
+              {children}
+              <Toaster />
+            </RouteProgressProvider>
+          </Suspense>
         </ThemeProvider>
       </body>
     </html>
