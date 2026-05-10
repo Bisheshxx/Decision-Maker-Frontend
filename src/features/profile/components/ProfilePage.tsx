@@ -56,7 +56,7 @@ function ProfileTab() {
   });
   return (
     <ApiStatusHandler
-      className="w-xl px-10 py-5 min-h-[70vh]"
+      className="md:w-xl px-10 py-5 min-h-[70vh]"
       isLoading={isLoading}
       isError={isError}
       isSuccess={isSuccess}
@@ -84,7 +84,7 @@ function ProfileTab() {
 
 function PasswordTab() {
   return (
-    <div className="w-xl px-10 py-5 min-h-[70vh]">
+    <div className="md:w-xl px-10 py-5 min-h-[70vh]">
       <h1 className="text-xl font-semibold">Update Password</h1>
       <div className="flex-center mt-4">
         <UpdatePasswordForm />
