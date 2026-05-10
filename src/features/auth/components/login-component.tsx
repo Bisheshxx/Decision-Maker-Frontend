@@ -67,6 +67,7 @@ export default function LoginComponent() {
     // onSuccess: () => router.push(DASHBOARD_ROUTE),
     onError: (error) => {
       const responseErrors = error.response?.errors;
+      console.log(responseErrors, "ladai sitti");
       form.setError("root", {
         type: "server",
         message: Array.isArray(responseErrors)

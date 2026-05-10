@@ -2,6 +2,7 @@ import { LOGIN_ROUTE } from "@/shared/constant/routes";
 import { api } from "./api";
 import axios, { InternalAxiosRequestConfig } from "axios";
 import { clearToken, getToken, saveToken } from "@/lib/auth";
+import { ApiErrorHandler } from "./Api-Error-Handler";
 
 // type RetryableRequestConfig = {
 //   _retry?: boolean;
@@ -48,6 +49,11 @@ export const setupInterceptors = () => {
             _retry?: boolean;
           })
         | undefined;
+
+      // If we have a server response with error data, throw ApiErrorHandler
+      if (error.response?.data && error.response.status !== 401) {
+        return Promise.reject(new ApiErrorHandler(error.response.data));
+      }
 
       if (!originalRequest) {
         return Promise.reject(error);
